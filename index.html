@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -74,7 +73,7 @@
   </style>
 </head>
 
-<body id="body-theme" class="theme-sunset pb-24 relative">
+<body id="body-theme" class="theme-sunset pb-16 relative">
 
   <div class="fixed top-6 right-6 z-50 flex flex-col items-center gap-3">
     <div class="flex flex-col items-center mb-1">
@@ -165,7 +164,6 @@
       </div>
 
       <div class="glass rounded-[2rem] p-6 flex flex-col max-h-[450px] distraction">
-        
         <div class="mb-5 highlight-box p-4 rounded-2xl flex justify-between items-center shadow-md">
           <p class="font-bold text-sm">Hydration 💧</p>
           <div class="flex gap-1 px-2" id="water-grid"></div>
@@ -183,23 +181,44 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 relative z-20 mt-6 distraction">
       
-      <div class="lg:col-span-1 space-y-6 flex flex-col">
+      <div class="lg:col-span-1 space-y-4 flex flex-col">
+        
         <div class="glass rounded-[2rem] p-5">
-          <div class="flex justify-between items-center mb-3">
-            <p class="uppercase tracking-[0.3em] text-xs opacity-70 font-bold">Focus & Calm</p>
+          <div class="flex justify-between items-center mb-4">
+            <p class="uppercase tracking-[0.3em] text-xs opacity-70 font-bold">Focus Audio</p>
             <button onclick="openZen()" class="highlight-box px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest hover:scale-105 transition flex items-center gap-1 shadow-md text-green-700 bg-white/50">
               <i class="fa-solid fa-leaf"></i> Breathe
             </button>
           </div>
-          <div class="space-y-3">
-            <div class="highlight-box p-2 rounded-xl">
-              <p class="font-bold text-[10px] mb-1">Ocean Vibes</p>
-              <audio controls class="w-full h-7 outline-none opacity-90"><source src="audio1.mp3" type="audio/mpeg"></audio>
+
+          <div class="highlight-box p-3 rounded-xl flex flex-col gap-2 relative mb-3">
+            <p class="text-[9px] uppercase tracking-widest font-bold opacity-60 text-center">Anjali's Playlist 🎵</p>
+            <p id="anjali-song-title" class="font-bold text-[11px] mb-1 text-center truncate">1. Song Title</p>
+            <audio id="anjali-player" controls class="w-full h-8 outline-none opacity-90" onplay="document.getElementById('focus-player').pause()">
+              <source id="anjali-source" src="" type="audio/mpeg">
+            </audio>
+            <div class="flex justify-between items-center px-4 mt-2">
+               <button onclick="prevAnjaliSong()" class="text-lg hover:scale-110 transition"><i class="fa-solid fa-backward-step"></i></button>
+               <button onclick="nextAnjaliSong()" class="text-lg hover:scale-110 transition"><i class="fa-solid fa-forward-step"></i></button>
             </div>
-            <div class="highlight-box p-2 rounded-xl">
-              <p class="font-bold text-[10px] mb-1">Lo-Fi</p>
-              <audio controls class="w-full h-7 outline-none opacity-90"><source src="audio2.mp3" type="audio/mpeg"></audio>
+          </div>
+
+          <div class="highlight-box p-3 rounded-xl flex flex-col gap-2 relative mb-3">
+            <p class="text-[9px] uppercase tracking-widest font-bold opacity-60 text-center">Sid's Focus Mix 🎧</p>
+            <p id="focus-song-title" class="font-bold text-[11px] mb-1 text-center truncate">1. Deep Focus Lofi</p>
+            <audio id="focus-player" controls class="w-full h-8 outline-none opacity-90" onplay="document.getElementById('anjali-player').pause()">
+              <source id="focus-source" src="" type="audio/mpeg">
+            </audio>
+            <div class="flex justify-between items-center px-4 mt-2">
+               <button onclick="prevFocusSong()" class="text-lg hover:scale-110 transition"><i class="fa-solid fa-backward-step"></i></button>
+               <button onclick="nextFocusSong()" class="text-lg hover:scale-110 transition"><i class="fa-solid fa-forward-step"></i></button>
             </div>
+          </div>
+
+          <div class="highlight-box p-3 rounded-xl flex items-center justify-between shadow-md">
+            <p class="font-bold text-[11px]"><i class="fa-solid fa-bell mr-1"></i> Alarm</p>
+            <input type="time" id="alarm-time" class="bg-white/50 rounded px-1 py-0.5 text-xs outline-none text-black font-bold">
+            <button onclick="toggleAlarm()" id="alarm-btn" class="bg-black/80 text-white text-[10px] px-2 py-1 rounded font-bold hover:scale-105 transition">Set</button>
           </div>
         </div>
 
@@ -233,6 +252,11 @@
       </div>
 
     </div>
+
+    <div class="relative z-20 text-center mt-12 mb-8 distraction">
+      <p class="font-bold text-lg tracking-[0.2em] opacity-90 drop-shadow-lg italic">I believe in you, always. ❤️</p>
+    </div>
+
   </div>
 
   <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none">
@@ -246,145 +270,130 @@
   </svg>
 
   <script>
-    // --- PERSONALIZED QUOTES (For main page) ---
-    const quotes = {
-      morning: [
-        "Good morning, future doctor. Grab your coffee and let's make today count.",
-        "If not now, then when? Start strong.",
-        "Your smile makes everything better. Keep it shining today."
-      ],
-      afternoon: [
-        "The sun is harsh outside—wear something white if you go out.",
-        "Take a small break. Butter milk piyo and cool down.",
-        "Consistency is key. This too shall pass."
-      ],
-      sunset: [
-        "Imagine you're at the beach watching this sunset. Relax for a moment.",
-        "Take a break, make chai for yourself... hope no one copies your recipe!",
-        "Another day closer to your dream. You're doing amazing."
-      ],
-      night: [
-        "Cool evenings call for hot chocolate and deep focus.",
-        "This too shall pass. All these late nights will be worth it.",
-        "Future doctor, rest your eyes soon. Tomorrow is a new day."
-      ]
-    };
-
-    // --- MASSIVE ROAST / JOKE DATABASE (~100+ variations) ---
-    // Automatically generated variety so she never gets bored
-    const baseRoasts = [
-      "We both know you were just staring at that same paragraph for 15 minutes. 👀",
-      "Anjali taking a '5-minute study break'... suddenly it's 2027. 🕰️",
-      "Your sleep schedule is currently more messed up than the Krebs cycle. 🔄",
-      "Remembering 10,000 drug names? Yes. Remembering where you kept your phone? Absolutely not. 📱",
-      "Diagnosing yourself with a rare tropical disease just because you coughed once. 🤡",
-      "Drink water, Anjali. Coffee is not a blood type! ☕",
-      "Mock test score: 📉. Delusion level: 📈. You got this though! 😂",
-      "Highlighting the entire page doesn't mean it's in your brain, babe. 🖍️",
-      "Staring at the Robbins Pathology book won't transfer the knowledge via osmosis.",
-      "Taking a nap to 'consolidate memory'. Sure, Anjali.",
-      "That moment when you read a question and the answer is C, but your heart says 'Cry'.",
-      "You have 99 problems and NEET PG syllabus is 98 of them.",
-      "Are you studying or just aggressively turning pages to feel productive?",
-      "Pharmacology: Where the names are made up and the logic doesn't matter.",
-      "Just saw your study plan. It’s a beautiful work of fiction.",
-      "You: I'm going to sleep early tonight! Also You at 3 AM: Why does this obscure syndrome exist?",
-      "Checking your phone to see the time, ending up scrolling for 45 minutes. Classic Anjali.",
-      "If overthinking was a medical specialty, you'd be the HOD.",
-      "Stop pretending to study while listening to romantic songs.",
-      "Your 'quick revision' is taking longer than Lord of the Rings.",
-      "WebMD says your symptoms are just severe procrastination.",
-      "I see you calculating how many hours of sleep you'll get if you go to bed right now.",
-      "Buying nice stationery won't make you pass the exam, but nice try.",
-      "Is it a headache or just the realization of how much syllabus is left?",
-      "Anjali's brain: 10% medicine, 90% song lyrics and craving snacks."
+    // --- 🎵 PLAYLIST 1: ANJALI'S UPLOADED SONGS 🎵 ---
+    // Just upload anjali1.mp3 through anjali7.mp3 to GitHub!
+    const anjaliPlaylist = [
+      { title: "Anjali's Song 1", file: "anjali1.mp3" },
+      { title: "Anjali's Song 2", file: "anjali2.mp3" },
+      { title: "Anjali's Song 3", file: "anjali3.mp3" },
+      { title: "Anjali's Song 4", file: "anjali4.mp3" },
+      { title: "Anjali's Song 5", file: "anjali5.mp3" },
+      { title: "Anjali's Song 6", file: "anjali6.mp3" },
+      { title: "Anjali's Song 7", file: "anjali7.mp3" }
     ];
 
-    // Multiply and slightly vary them to create a massive pool
-    const roasts = [];
-    for(let i=1; i<=4; i++) {
-      baseRoasts.forEach(r => {
-        if(i===1) roasts.push(r);
-        else if(i===2) roasts.push("Fun fact: " + r.toLowerCase());
-        else if(i===3) roasts.push("Hey Future Doctor, " + r.toLowerCase());
-        else roasts.push(r + " Stop it. 😂");
-      });
+    let aIndex = 0;
+    const aPlayer = document.getElementById('anjali-player');
+    const aSource = document.getElementById('anjali-source');
+    const aTitle = document.getElementById('anjali-song-title');
+
+    function loadAnjali(index) {
+      aTitle.innerText = `${index + 1}. ${anjaliPlaylist[index].title}`;
+      aSource.src = anjaliPlaylist[index].file;
+      aPlayer.load(); aPlayer.play().catch(e => {});
+    }
+    function nextAnjaliSong() { aIndex = (aIndex + 1) % anjaliPlaylist.length; loadAnjali(aIndex); }
+    function prevAnjaliSong() { aIndex = (aIndex - 1 + anjaliPlaylist.length) % anjaliPlaylist.length; loadAnjali(aIndex); }
+    aPlayer.addEventListener('ended', nextAnjaliSong);
+    aTitle.innerText = `1. ${anjaliPlaylist[0].title}`; aSource.src = anjaliPlaylist[0].file;
+
+    // --- 🎧 PLAYLIST 2: SID'S FOCUS MIX (LIVE LINKS) 🎧 ---
+    // These work immediately without downloading anything.
+    const focusPlaylist = [
+      { title: "Deep Focus Lofi", file: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" },
+      { title: "Ocean Waves", file: "https://actions.google.com/sounds/v1/water/ocean_waves_steady.ogg" },
+      { title: "Soft Rain", file: "https://cdn.pixabay.com/download/audio/2022/04/27/audio_6644ebdc8c.mp3" },
+      { title: "Coffee Shop Ambience", file: "https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg" },
+      { title: "Calm Piano", file: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b8175567.mp3" },
+      { title: "Night Fire & Crickets", file: "https://actions.google.com/sounds/v1/ambiences/fire.ogg" },
+      { title: "Chill Study Beat", file: "https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6591201e.mp3" }
+    ];
+
+    let fIndex = 0;
+    const fPlayer = document.getElementById('focus-player');
+    const fSource = document.getElementById('focus-source');
+    const fTitle = document.getElementById('focus-song-title');
+
+    function loadFocus(index) {
+      fTitle.innerText = `${index + 1}. ${focusPlaylist[index].title}`;
+      fSource.src = focusPlaylist[index].file;
+      fPlayer.load(); fPlayer.play().catch(e => {});
+    }
+    function nextFocusSong() { fIndex = (fIndex + 1) % focusPlaylist.length; loadFocus(fIndex); }
+    function prevFocusSong() { fIndex = (fIndex - 1 + focusPlaylist.length) % focusPlaylist.length; loadFocus(fIndex); }
+    fPlayer.addEventListener('ended', nextFocusSong);
+    fTitle.innerText = `1. ${focusPlaylist[0].title}`; fSource.src = focusPlaylist[0].file;
+
+
+    // --- ⏰ LOUD ALARM LOGIC ⏰ ---
+    let alarmTime = null;
+    const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+    alarmSound.loop = true;
+
+    function toggleAlarm() {
+      const input = document.getElementById('alarm-time').value;
+      const btn = document.getElementById('alarm-btn');
+      
+      if (btn.innerText === "Stop Ringing") {
+          alarmSound.pause(); alarmSound.currentTime = 0;
+          btn.innerText = "Set"; btn.classList.replace("bg-red-500", "bg-black/80");
+          alarmTime = null; return;
+      }
+      if (!input) return;
+      
+      if (alarmTime) {
+          alarmTime = null; btn.innerText = "Set"; btn.classList.replace("bg-red-500", "bg-black/80");
+          showNotification("Alarm cancelled.", "Alarm ⏰");
+      } else {
+          alarmTime = input; btn.innerText = "Cancel"; btn.classList.replace("bg-black/80", "bg-red-500");
+          showNotification(`Alarm set for ${input}.`, "Alarm ⏰");
+      }
     }
 
-    function roastAnjali() {
-      const randomRoast = roasts[Math.floor(Math.random() * roasts.length)];
-      showNotification(randomRoast, "Reality Check 🤡");
-    }
+
+    // --- PERSONALIZED QUOTES ---
+    const quotes = {
+      morning: [ "Good morning, future doctor. Grab your coffee and let's make today count.", "If not now, then when? Start strong.", "Your smile makes everything better. Keep it shining today." ],
+      afternoon: [ "The sun is harsh outside—wear something white if you go out.", "Take a small break. Butter milk piyo and cool down.", "Consistency is key. This too shall pass." ],
+      sunset: [ "Imagine you're at the beach watching this sunset. Relax for a moment.", "Take a break, make chai for yourself... hope no one copies your recipe!", "Another day closer to your dream. You're doing amazing." ],
+      night: [ "Cool evenings call for hot chocolate and deep focus.", "This too shall pass. All these late nights will be worth it.", "Future doctor, rest your eyes soon. Tomorrow is a new day." ]
+    };
+
+    // --- ROAST DATABASE ---
+    const baseRoasts = [
+      "We both know you were just staring at that same paragraph for 15 minutes. 👀", "Anjali taking a '5-minute study break'... suddenly it's 2027. 🕰️",
+      "Your sleep schedule is currently more messed up than the Krebs cycle. 🔄", "Remembering 10,000 drug names? Yes. Remembering where you kept your phone? Absolutely not. 📱",
+      "Diagnosing yourself with a rare tropical disease just because you coughed once. 🤡", "Drink water, Anjali. Coffee is not a blood type! ☕",
+      "Mock test score: 📉. Delusion level: 📈. You got this though! 😂", "Highlighting the entire page doesn't mean it's in your brain, babe. 🖍️",
+      "Staring at the Robbins Pathology book won't transfer the knowledge via osmosis.", "Taking a nap to 'consolidate memory'. Sure, Anjali.",
+      "That moment when you read a question and the answer is C, but your heart says 'Cry'.", "You have 99 problems and NEET PG syllabus is 98 of them.",
+      "Are you studying or just aggressively turning pages to feel productive?", "Pharmacology: Where the names are made up and the logic doesn't matter.",
+      "Just saw your study plan. It’s a beautiful work of fiction.", "You: I'm going to sleep early tonight! Also You at 3 AM: Why does this obscure syndrome exist?",
+      "Checking your phone to see the time, ending up scrolling for 45 minutes. Classic Anjali.", "If overthinking was a medical specialty, you'd be the HOD.",
+      "Stop pretending to study while listening to romantic songs.", "Your 'quick revision' is taking longer than Lord of the Rings.",
+      "WebMD says your symptoms are just severe procrastination.", "I see you calculating how many hours of sleep you'll get if you go to bed right now.",
+      "Buying nice stationery won't make you pass the exam, but nice try.", "Is it a headache or just the realization of how much syllabus is left?",
+      "Anjali's brain: 10% medicine, 90% song lyrics and craving snacks."
+    ];
+    const roasts = [];
+    for(let i=1; i<=4; i++) { baseRoasts.forEach(r => { if(i===1) roasts.push(r); else if(i===2) roasts.push("Fun fact: " + r.toLowerCase()); else if(i===3) roasts.push("Hey Future Doctor, " + r.toLowerCase()); else roasts.push(r + " Stop it. 😂"); }); }
+    function roastAnjali() { showNotification(roasts[Math.floor(Math.random() * roasts.length)], "Reality Check 🤡"); }
 
     // --- BREATHE / ZEN MODE LOGIC ---
     let zenCycle;
-    const zenPhrases = [
-      "Breathe in deeply...",
-      "And let it out...",
-      "Go watch the sunset...",
-      "Think about the beach...",
-      "Time to make some chai...",
-      "Relax your shoulders...",
-      "You are doing great...",
-      "If not now, then when?"
-    ];
+    const zenPhrases = [ "Breathe in deeply...", "And let it out...", "Go watch the sunset...", "Think about the beach...", "Time to make some chai...", "Relax your shoulders...", "You are doing great...", "If not now, then when?" ];
     let phraseIndex = 0;
-
-    function openZen() {
-      const modal = document.getElementById('zen-modal');
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      phraseIndex = 0;
-      document.getElementById('zen-message').innerText = "Calm your mind, Anjali.";
-      runBreatheCycle();
-      zenCycle = setInterval(runBreatheCycle, 8000); // 4s in, 4s out
-    }
-
-    function closeZen() {
-      const modal = document.getElementById('zen-modal');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      clearInterval(zenCycle);
-      const circle = document.getElementById('breathe-circle');
-      circle.classList.remove('breathe-inhale', 'breathe-exhale');
-      document.getElementById('breathe-text').innerText = "READY";
-    }
-
-    function runBreatheCycle() {
-      const circle = document.getElementById('breathe-circle');
-      const text = document.getElementById('breathe-text');
-      const message = document.getElementById('zen-message');
-      
-      message.innerText = zenPhrases[phraseIndex % zenPhrases.length];
-      phraseIndex++;
-
-      text.innerText = "INHALE";
-      circle.classList.remove('breathe-exhale');
-      circle.classList.add('breathe-inhale');
-
-      setTimeout(() => {
-        text.innerText = "EXHALE";
-        circle.classList.remove('breathe-inhale');
-        circle.classList.add('breathe-exhale');
-      }, 4000);
-    }
+    function openZen() { const modal = document.getElementById('zen-modal'); modal.classList.remove('opacity-0', 'pointer-events-none'); phraseIndex = 0; document.getElementById('zen-message').innerText = "Calm your mind, Anjali."; runBreatheCycle(); zenCycle = setInterval(runBreatheCycle, 8000); }
+    function closeZen() { const modal = document.getElementById('zen-modal'); modal.classList.add('opacity-0', 'pointer-events-none'); clearInterval(zenCycle); const circle = document.getElementById('breathe-circle'); circle.classList.remove('breathe-inhale', 'breathe-exhale'); document.getElementById('breathe-text').innerText = "READY"; }
+    function runBreatheCycle() { const circle = document.getElementById('breathe-circle'); const text = document.getElementById('breathe-text'); const message = document.getElementById('zen-message'); message.innerText = zenPhrases[phraseIndex % zenPhrases.length]; phraseIndex++; text.innerText = "INHALE"; circle.classList.remove('breathe-exhale'); circle.classList.add('breathe-inhale'); setTimeout(() => { text.innerText = "EXHALE"; circle.classList.remove('breathe-inhale'); circle.classList.add('breathe-exhale'); }, 4000); }
 
     // --- RANDOM MUSIC PROMPT ---
-    setTimeout(() => {
-      const todayStr = new Date().toLocaleDateString('en-IN');
-      const lastPrompt = localStorage.getItem('musicPromptDate');
-      if (lastPrompt !== todayStr) {
-        showNotification("🎵 Take a break and listen to some songs ala!", "Vibe Check");
-        localStorage.setItem('musicPromptDate', todayStr);
-      }
-    }, 120000);
+    setTimeout(() => { const todayStr = new Date().toLocaleDateString('en-IN'); const lastPrompt = localStorage.getItem('musicPromptDate'); if (lastPrompt !== todayStr) { showNotification("🎵 Take a break and listen to some songs ala!", "Vibe Check"); localStorage.setItem('musicPromptDate', todayStr); } }, 120000);
 
     // --- MANUAL THEME SWITCHER ---
     const themes = ['theme-auto', 'theme-ocean', 'theme-coffee', 'theme-beach', 'theme-dark'];
     let currentThemeIndex = 0;
-    function cycleTheme() {
-      currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-      updateClockAndTheme();
-      showNotification(`Theme changed to: ${themes[currentThemeIndex].replace('theme-', '').toUpperCase()}`, "Theme Updated");
-    }
+    function cycleTheme() { currentThemeIndex = (currentThemeIndex + 1) % themes.length; updateClockAndTheme(); showNotification(`Theme changed to: ${themes[currentThemeIndex].replace('theme-', '').toUpperCase()}`, "Theme Updated"); }
 
     // --- DOWNLOAD / BACKUP DATA ---
     function downloadData() {
@@ -394,102 +403,52 @@
       let savedCards = JSON.parse(localStorage.getItem('flashcards')) || [];
       if (savedCards.length === 0) data += "No flashcards saved.\n";
       savedCards.forEach((c, i) => { data += `${i+1}. Q: ${c.front}\n    A: ${c.back}\n\n`; });
-      
-      const blob = new Blob([data], {type: "text/plain"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = "Anjalis_Study_Backup.txt";
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-      showNotification("Backup downloaded securely!", "Data Saved");
+      const blob = new Blob([data], {type: "text/plain"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = "Anjalis_Study_Backup.txt"; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); showNotification("Backup downloaded securely!", "Data Saved");
     }
 
     // --- 1. NEET PG COUNTDOWN ---
     const examDate = new Date("2026-08-15T00:00:00").getTime();
-    function updateCountdown() {
-      const distance = examDate - new Date().getTime();
-      if (distance < 0) { document.getElementById('exam-countdown').innerText = "Exam Day!"; return; }
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      document.getElementById('exam-countdown').innerText = `${days}d ${hours}h to NEET PG`;
-    } setInterval(updateCountdown, 60000); updateCountdown();
+    function updateCountdown() { const distance = examDate - new Date().getTime(); if (distance < 0) { document.getElementById('exam-countdown').innerText = "Exam Day!"; return; } const days = Math.floor(distance / (1000 * 60 * 60 * 24)); const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); document.getElementById('exam-countdown').innerText = `${days}d ${hours}h to NEET PG`; } setInterval(updateCountdown, 60000); updateCountdown();
 
     // --- 2. 7-DAY STUDY GRAPH ---
     let dailyHistory = JSON.parse(localStorage.getItem('studyHistory')) || {};
     function renderGraph() {
-      const container = document.getElementById('chart-container'); container.innerHTML = '';
-      const today = new Date(); let maxSeconds = 14400;
+      const container = document.getElementById('chart-container'); container.innerHTML = ''; const today = new Date(); let maxSeconds = 14400;
+      for (let i = 6; i >= 0; i--) { let d = new Date(today); d.setDate(today.getDate() - i); let dateStr = d.toLocaleDateString('en-IN'); if (dailyHistory[dateStr] > maxSeconds) maxSeconds = dailyHistory[dateStr]; }
       for (let i = 6; i >= 0; i--) {
-        let d = new Date(today); d.setDate(today.getDate() - i);
-        let dateStr = d.toLocaleDateString('en-IN');
-        if (dailyHistory[dateStr] > maxSeconds) maxSeconds = dailyHistory[dateStr];
-      }
-      for (let i = 6; i >= 0; i--) {
-        let d = new Date(today); d.setDate(today.getDate() - i);
-        let dateStr = d.toLocaleDateString('en-IN');
-        let dayLabel = d.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0);
-        let seconds = (i === 0) ? totalSeconds : (dailyHistory[dateStr] || 0);
-        let heightPercent = Math.min((seconds / maxSeconds) * 100, 100);
-        const barWrap = document.createElement('div');
-        barWrap.className = "flex-1 flex flex-col items-center justify-end h-full gap-1 group relative";
-        barWrap.innerHTML = `<div class="absolute -top-6 text-[9px] font-bold opacity-0 group-hover:opacity-100 transition bg-black/50 text-white px-1 rounded">${(seconds/3600).toFixed(1)}h</div>
-          <div class="w-full bg-white/60 rounded-t-sm transition-all duration-500 hover:bg-white/90" style="height: ${Math.max(heightPercent, 2)}%"></div>
-          <span class="text-[9px] font-bold opacity-80">${dayLabel}</span>`;
-        container.appendChild(barWrap);
+        let d = new Date(today); d.setDate(today.getDate() - i); let dateStr = d.toLocaleDateString('en-IN'); let dayLabel = d.toLocaleDateString('en-US', { weekday: 'short' }).charAt(0); let seconds = (i === 0) ? totalSeconds : (dailyHistory[dateStr] || 0); let heightPercent = Math.min((seconds / maxSeconds) * 100, 100);
+        const barWrap = document.createElement('div'); barWrap.className = "flex-1 flex flex-col items-center justify-end h-full gap-1 group relative"; barWrap.innerHTML = `<div class="absolute -top-6 text-[9px] font-bold opacity-0 group-hover:opacity-100 transition bg-black/50 text-white px-1 rounded">${(seconds/3600).toFixed(1)}h</div><div class="w-full bg-white/60 rounded-t-sm transition-all duration-500 hover:bg-white/90" style="height: ${Math.max(heightPercent, 2)}%"></div><span class="text-[9px] font-bold opacity-80">${dayLabel}</span>`; container.appendChild(barWrap);
       }
     }
 
     // --- 3. SCRATCHPAD ---
-    const scratchpad = document.getElementById('scratchpad');
-    scratchpad.value = localStorage.getItem('scratchpadText') || '';
+    const scratchpad = document.getElementById('scratchpad'); scratchpad.value = localStorage.getItem('scratchpadText') || '';
     function saveScratchpad() { localStorage.setItem('scratchpadText', scratchpad.value); }
 
     // --- 4. DEEP FOCUS & TIMER LOGIC ---
     let isDeepFocus = false;
-    function toggleDeepFocus() {
-      isDeepFocus = !isDeepFocus;
-      document.body.classList.toggle('deep-focus-on', isDeepFocus);
-      document.getElementById('focus-icon').classList.toggle('fa-eye', !isDeepFocus);
-      document.getElementById('focus-icon').classList.toggle('fa-eye-slash', isDeepFocus);
-    }
+    function toggleDeepFocus() { isDeepFocus = !isDeepFocus; document.body.classList.toggle('deep-focus-on', isDeepFocus); document.getElementById('focus-icon').classList.toggle('fa-eye', !isDeepFocus); document.getElementById('focus-icon').classList.toggle('fa-eye-slash', isDeepFocus); }
 
     let totalSeconds = parseInt(localStorage.getItem('totalSeconds')) || 0;
     let timerInterval = null; let isPomodoro = false; let sessionSeconds = 0; let pomodoroState = 'work';
-    let streak = parseInt(localStorage.getItem('studyStreak')) || 0;
-    let lastStreakDate = localStorage.getItem('lastStreakDate');
+    let streak = parseInt(localStorage.getItem('studyStreak')) || 0; let lastStreakDate = localStorage.getItem('lastStreakDate');
 
     function checkDateReset() {
-      const todayStr = new Date().toLocaleDateString('en-IN');
-      const savedDate = localStorage.getItem('studyDate');
+      const todayStr = new Date().toLocaleDateString('en-IN'); const savedDate = localStorage.getItem('studyDate');
       if (savedDate !== todayStr) {
-        if(savedDate) dailyHistory[savedDate] = totalSeconds;
-        localStorage.setItem('studyHistory', JSON.stringify(dailyHistory));
-        localStorage.setItem('studyDate', todayStr);
-        localStorage.setItem('totalSeconds', 0); localStorage.setItem('todos', JSON.stringify([])); localStorage.setItem('waterCount', 0);
-        totalSeconds = 0; todos = []; waterCount = 0;
-        updateTotalTimeDisplay(); renderTodos(); renderWater(); renderGraph();
-        let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-        const yStr = yesterday.toLocaleDateString('en-IN');
+        if(savedDate) dailyHistory[savedDate] = totalSeconds; localStorage.setItem('studyHistory', JSON.stringify(dailyHistory)); localStorage.setItem('studyDate', todayStr); localStorage.setItem('totalSeconds', 0); localStorage.setItem('todos', JSON.stringify([])); localStorage.setItem('waterCount', 0);
+        totalSeconds = 0; todos = []; waterCount = 0; updateTotalTimeDisplay(); renderTodos(); renderWater(); renderGraph();
+        let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); const yStr = yesterday.toLocaleDateString('en-IN');
         if (lastStreakDate !== todayStr && lastStreakDate !== yStr) { streak = 0; localStorage.setItem('studyStreak', streak); updateStreakUI(); }
       }
     }
-
     function updateStreakUI() { document.getElementById('streak-counter').innerText = `${streak} Day Streak`; } updateStreakUI();
-    function formatTime(sec, hr = true) {
-      const h = Math.floor(sec / 3600).toString().padStart(2, '0');
-      const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
-      const s = (sec % 60).toString().padStart(2, '0');
-      return hr ? `${h}:${m}:${s}` : `${m}:${s}`;
-    }
+    function formatTime(sec, hr = true) { const h = Math.floor(sec / 3600).toString().padStart(2, '0'); const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0'); const s = (sec % 60).toString().padStart(2, '0'); return hr ? `${h}:${m}:${s}` : `${m}:${s}`; }
     function updateTotalTimeDisplay() { document.getElementById('total-time').innerText = formatTime(totalSeconds); renderGraph(); }
     function updateSessionTimeDisplay() { document.getElementById('session-time').innerText = formatTime(sessionSeconds, !isPomodoro); }
     updateTotalTimeDisplay(); updateSessionTimeDisplay();
 
-    function toggleTimerMode() {
-      pauseTimer(); isPomodoro = !isPomodoro;
-      document.getElementById('mode-text').innerText = isPomodoro ? "Switch to Stopwatch" : "Switch to Pomodoro";
-      document.getElementById('session-label').innerText = isPomodoro ? "Pomodoro (Work)" : "Stopwatch";
-      sessionSeconds = isPomodoro ? 25 * 60 : 0; updateSessionTimeDisplay();
-    }
+    function toggleTimerMode() { pauseTimer(); isPomodoro = !isPomodoro; document.getElementById('mode-text').innerText = isPomodoro ? "Switch to Stopwatch" : "Switch to Pomodoro"; document.getElementById('session-label').innerText = isPomodoro ? "Pomodoro (Work)" : "Stopwatch"; sessionSeconds = isPomodoro ? 25 * 60 : 0; updateSessionTimeDisplay(); }
 
     function startTimer() {
       document.getElementById('start-btn').classList.add('hidden'); document.getElementById('stop-btn').classList.remove('hidden');
@@ -504,28 +463,21 @@
         }
         if (totalSeconds === 7200) {
           const todayStr = new Date().toLocaleDateString('en-IN');
-          if(lastStreakDate !== todayStr) {
-             streak++; lastStreakDate = todayStr;
-             localStorage.setItem('studyStreak', streak); localStorage.setItem('lastStreakDate', todayStr);
-             updateStreakUI(); showNotification("🔥 2 Hours hit! Streak increased!", "Milestone");
-          }
+          if(lastStreakDate !== todayStr) { streak++; lastStreakDate = todayStr; localStorage.setItem('studyStreak', streak); localStorage.setItem('lastStreakDate', todayStr); updateStreakUI(); showNotification("🔥 2 Hours hit! Streak increased!", "Milestone"); }
         }
-        localStorage.setItem('totalSeconds', totalSeconds);
-        updateTotalTimeDisplay(); updateSessionTimeDisplay();
+        localStorage.setItem('totalSeconds', totalSeconds); updateTotalTimeDisplay(); updateSessionTimeDisplay();
       }, 1000);
     }
     function pauseTimer() { clearInterval(timerInterval); document.getElementById('stop-btn').classList.add('hidden'); document.getElementById('start-btn').classList.remove('hidden'); }
     function resetSession() { pauseTimer(); if (isPomodoro) { pomodoroState = 'work'; document.getElementById('session-label').innerText = "Pomodoro (Work)"; sessionSeconds = 25 * 60; } else { sessionSeconds = 0; } updateSessionTimeDisplay(); }
 
     function updateClockAndTheme() {
-      const timeString = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false });
-      document.getElementById('clock').innerText = timeString;
-      const hour = parseInt(timeString.split(':')[0]);
-      const body = document.getElementById('body-theme'); const celestial = document.getElementById('celestial');
-      const quoteEl = document.getElementById('motivation-quote');
-      const quoteIndex = new Date().getHours() % 3;
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false });
+      document.getElementById('clock').innerText = timeString; const hour = parseInt(timeString.split(':')[0]);
+      const body = document.getElementById('body-theme'); const celestial = document.getElementById('celestial'); const quoteEl = document.getElementById('motivation-quote'); const quoteIndex = new Date().getHours() % 3;
 
-      body.className = `pb-24 relative transition-all duration-1000 ${isDeepFocus ? 'deep-focus-on' : ''}`;
+      body.className = `pb-16 relative transition-all duration-1000 ${isDeepFocus ? 'deep-focus-on' : ''}`;
       
       if (themes[currentThemeIndex] === 'theme-auto') {
         if (hour >= 5 && hour < 12) { body.classList.add('theme-morning'); celestial.className = 'celestial-body sun'; quoteEl.innerText = `"${quotes.morning[quoteIndex]}"`; }
@@ -533,33 +485,24 @@
         else if (hour >= 16 && hour < 19) { body.classList.add('theme-sunset'); celestial.className = 'celestial-body sun'; quoteEl.innerText = `"${quotes.sunset[quoteIndex]}"`; }
         else { body.classList.add('theme-night'); celestial.className = 'celestial-body moon'; quoteEl.innerText = `"${quotes.night[quoteIndex]}"`; }
       } else {
-        body.classList.add(themes[currentThemeIndex]);
-        celestial.className = (themes[currentThemeIndex] === 'theme-dark' || themes[currentThemeIndex] === 'theme-ocean') ? 'celestial-body moon' : 'celestial-body sun';
-        if (hour >= 5 && hour < 12) quoteEl.innerText = `"${quotes.morning[quoteIndex]}"`;
-        else if (hour >= 12 && hour < 16) quoteEl.innerText = `"${quotes.afternoon[quoteIndex]}"`;
-        else if (hour >= 16 && hour < 19) quoteEl.innerText = `"${quotes.sunset[quoteIndex]}"`;
-        else quoteEl.innerText = `"${quotes.night[quoteIndex]}"`;
+        body.classList.add(themes[currentThemeIndex]); celestial.className = (themes[currentThemeIndex] === 'theme-dark' || themes[currentThemeIndex] === 'theme-ocean') ? 'celestial-body moon' : 'celestial-body sun';
+        if (hour >= 5 && hour < 12) quoteEl.innerText = `"${quotes.morning[quoteIndex]}"`; else if (hour >= 12 && hour < 16) quoteEl.innerText = `"${quotes.afternoon[quoteIndex]}"`; else if (hour >= 16 && hour < 19) quoteEl.innerText = `"${quotes.sunset[quoteIndex]}"`; else quoteEl.innerText = `"${quotes.night[quoteIndex]}"`;
+      } checkDateReset();
+
+      // Check Alarm Trigger
+      if (alarmTime) {
+          const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+          if (currentTimeStr === alarmTime && now.getSeconds() === 0) {
+              alarmSound.play();
+              showNotification("WAKE UP! It's time! ⏰", "ALARM RINGING!");
+              document.getElementById('alarm-btn').innerText = "Stop Ringing";
+          }
       }
-      checkDateReset();
     } setInterval(updateClockAndTheme, 1000); updateClockAndTheme();
 
-    async function fetchWeather() {
-      try {
-        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.30&longitude=80.43&current_weather=true");
-        const data = await res.json();
-        document.getElementById('weather').innerText = `${data.current_weather.temperature}°C in Guntur`;
-      } catch (e) { document.getElementById('weather').innerText = `Guntur`; }
-    } fetchWeather(); setInterval(fetchWeather, 3600000);
+    async function fetchWeather() { try { const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.30&longitude=80.43&current_weather=true"); const data = await res.json(); document.getElementById('weather').innerText = `${data.current_weather.temperature}°C in Guntur`; } catch (e) { document.getElementById('weather').innerText = `Guntur`; } } fetchWeather(); setInterval(fetchWeather, 3600000);
 
-    function showNotification(msg, title = "Daily Note") {
-      const modal = document.getElementById('notification-modal');
-      document.getElementById('notification-title').innerText = title;
-      document.getElementById('daily-reminder').innerText = msg;
-      modal.classList.replace('opacity-0', 'opacity-100');
-      setTimeout(() => modal.classList.replace('opacity-100', 'opacity-0'), 5000);
-    }
-    
-    // Custom Daily Note based on time when clicking Sun/Moon
+    function showNotification(msg, title = "Daily Note") { const modal = document.getElementById('notification-modal'); document.getElementById('notification-title').innerText = title; document.getElementById('daily-reminder').innerText = msg; modal.classList.replace('opacity-0', 'opacity-100'); setTimeout(() => modal.classList.replace('opacity-100', 'opacity-0'), 5000); }
     function toggleNotification() { 
       const hour = new Date().getHours();
       if(hour >= 5 && hour < 12) showNotification("Watch the sunrise today if you can. You're doing great.", "Morning Note");
@@ -570,38 +513,15 @@
 
     // Hydration, Todos, Flashcards
     let waterCount = parseInt(localStorage.getItem('waterCount')) || 0;
-    function renderWater() {
-      const g = document.getElementById('water-grid'); g.innerHTML = '';
-      for (let i = 1; i <= 8; i++) {
-        g.innerHTML += `<i class="fa-solid fa-droplet text-xl cursor-pointer transition-all hover:scale-125 ${i <= waterCount ? 'text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'text-current opacity-30'}" onclick="updateWater(${i})"></i>`;
-      }
-    } function updateWater(n) { waterCount = n; localStorage.setItem('waterCount', n); renderWater(); } renderWater();
+    function renderWater() { const g = document.getElementById('water-grid'); g.innerHTML = ''; for (let i = 1; i <= 8; i++) { g.innerHTML += `<i class="fa-solid fa-droplet text-xl cursor-pointer transition-all hover:scale-125 ${i <= waterCount ? 'text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'text-current opacity-30'}" onclick="updateWater(${i})"></i>`; } } function updateWater(n) { waterCount = n; localStorage.setItem('waterCount', n); renderWater(); } renderWater();
 
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
-    function renderTodos() {
-      const l = document.getElementById('todo-list'); l.innerHTML = '';
-      todos.forEach((t, i) => {
-        l.innerHTML += `<li class="flex justify-between items-center highlight-box p-3 rounded-xl transition ${t.done ? 'opacity-50' : ''}">
-          <div class="flex items-center gap-3 overflow-hidden"><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${i})" class="w-5 h-5 cursor-pointer accent-current"><span class="text-[13px] font-bold truncate ${t.done ? 'line-through' : ''}">${t.text}</span></div>
-          <button onclick="deleteTodo(${i})" class="text-xs opacity-60 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button></li>`;
-      }); localStorage.setItem('todos', JSON.stringify(todos));
-    }
-    function addTodo(e) { e.preventDefault(); const i = document.getElementById('todo-input'); if(i.value.trim()) { todos.push({text: i.value.trim(), done: false}); i.value=''; renderTodos(); } }
-    function toggleTodo(i) { todos[i].done = !todos[i].done; renderTodos(); }
-    function deleteTodo(i) { todos.splice(i, 1); renderTodos(); } renderTodos();
+    function renderTodos() { const l = document.getElementById('todo-list'); l.innerHTML = ''; todos.forEach((t, i) => { l.innerHTML += `<li class="flex justify-between items-center highlight-box p-3 rounded-xl transition ${t.done ? 'opacity-50' : ''}"><div class="flex items-center gap-3 overflow-hidden"><input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${i})" class="w-5 h-5 cursor-pointer accent-current"><span class="text-[13px] font-bold truncate ${t.done ? 'line-through' : ''}">${t.text}</span></div><button onclick="deleteTodo(${i})" class="text-xs opacity-60 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button></li>`; }); localStorage.setItem('todos', JSON.stringify(todos)); }
+    function addTodo(e) { e.preventDefault(); const i = document.getElementById('todo-input'); if(i.value.trim()) { todos.push({text: i.value.trim(), done: false}); i.value=''; renderTodos(); } } function toggleTodo(i) { todos[i].done = !todos[i].done; renderTodos(); } function deleteTodo(i) { todos.splice(i, 1); renderTodos(); } renderTodos();
 
     let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [{ front: "Torsades de pointes treatment", back: "Magnesium Sulfate" }];
-    function renderFlashcards() {
-      const g = document.getElementById('flashcard-grid'); g.innerHTML = '';
-      flashcards.forEach((c, i) => {
-        g.innerHTML += `<div class="perspective h-28"><div class="flip-card-inner cursor-pointer" onclick="this.parentElement.classList.toggle('is-flipped')">
-          <div class="flip-card-front highlight-box rounded-xl"><p class="font-bold text-[12px] leading-tight">${c.front}</p></div>
-          <div class="flip-card-back bg-white/40 border border-white/60 rounded-xl shadow-lg backdrop-blur-md relative"><p class="font-bold text-[12px] leading-tight text-black">${c.back}</p><button onclick="event.stopPropagation(); deleteFlashcard(${i})" class="absolute top-2 right-2 text-[10px] opacity-60 hover:opacity-100 text-black"><i class="fa-solid fa-trash"></i></button></div>
-        </div></div>`;
-      }); localStorage.setItem('flashcards', JSON.stringify(flashcards));
-    }
-    function addFlashcard(e) { e.preventDefault(); const f = document.getElementById('fc-front'); const b = document.getElementById('fc-back'); flashcards.push({front: f.value, back: b.value}); f.value=''; b.value=''; renderFlashcards(); }
-    function deleteFlashcard(i) { flashcards.splice(i, 1); renderFlashcards(); } renderFlashcards();
+    function renderFlashcards() { const g = document.getElementById('flashcard-grid'); g.innerHTML = ''; flashcards.forEach((c, i) => { g.innerHTML += `<div class="perspective h-28"><div class="flip-card-inner cursor-pointer" onclick="this.parentElement.classList.toggle('is-flipped')"><div class="flip-card-front highlight-box rounded-xl"><p class="font-bold text-[12px] leading-tight">${c.front}</p></div><div class="flip-card-back bg-white/40 border border-white/60 rounded-xl shadow-lg backdrop-blur-md relative"><p class="font-bold text-[12px] leading-tight text-black">${c.back}</p><button onclick="event.stopPropagation(); deleteFlashcard(${i})" class="absolute top-2 right-2 text-[10px] opacity-60 hover:opacity-100 text-black"><i class="fa-solid fa-trash"></i></button></div></div></div>`; }); localStorage.setItem('flashcards', JSON.stringify(flashcards)); }
+    function addFlashcard(e) { e.preventDefault(); const f = document.getElementById('fc-front'); const b = document.getElementById('fc-back'); flashcards.push({front: f.value, back: b.value}); f.value=''; b.value=''; renderFlashcards(); } function deleteFlashcard(i) { flashcards.splice(i, 1); renderFlashcards(); } renderFlashcards();
   </script>
 </body>
 </html>
